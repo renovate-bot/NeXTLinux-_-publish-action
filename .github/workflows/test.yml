@@ -12,24 +12,24 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: Harden Runner
-      uses: nextlinux/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
-      with:
-        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+      - name: Harden Runner
+        uses: nextlinux/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
 
-    - name: Checkout
-      uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
+      - name: Checkout
+        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
 
-    - name: Set Node.JS
-      uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # v2.5.1
-      with:
-        node-version: 12.x
+      - name: Set Node.JS
+        uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561 # v2.5.1
+        with:
+          node-version: 12.x
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build
-      run: npm run build
-    
-    - name: Run tests
-      run: npm run test
+      - name: Build
+        run: npm run build
+
+      - name: Run tests
+        run: npm run test

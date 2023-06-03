@@ -27,16 +27,16 @@ jobs:
     permissions:
       contents: write
     steps:
-    - name: Harden Runner
-      uses: nextlinux/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
-      with:
-        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+      - name: Harden Runner
+        uses: nextlinux/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
 
-    - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
+      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
 
-    - name: Update the ${{ env.TAG_NAME }} tag
-      id: update-major-tag
-      uses: ./
-      with:
-        source-tag: ${{ env.TAG_NAME }}
-        slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+      - name: Update the ${{ env.TAG_NAME }} tag
+        id: update-major-tag
+        uses: ./
+        with:
+          source-tag: ${{ env.TAG_NAME }}
+          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
