@@ -1,14 +1,28 @@
 name: Licensed
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  push: {branches: main}
+  pull_request: {branches: main}
+
+permissions:
+  contents: read
 
 jobs:
-  call-licensed:
-    name: Licensed
-    uses: actions/reusable-workflows/.github/workflows/licensed.yml@main
+  test:
+    runs-on: ubuntu-latest
+    name: Check licenses
+    steps:
+      - name: Harden Runner
+        uses: nextlinux/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
+      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
+      - run: npm ci
+      - name: Install licensed
+        run: |
+          cd $RUNNER_TEMP
+          curl -Lfs -o licensed.tar.gz https://github.com/github/licensed/releases/download/2.12.2/licensed-2.12.2-linux-x64.tar.gz
+          sudo tar -xzf licensed.tar.gz
+          sudo mv licensed /usr/local/bin/licensed
+      - run: licensed status
