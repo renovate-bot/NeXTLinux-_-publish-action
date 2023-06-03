@@ -1,5 +1,4 @@
 name: Release new action version
-
 on:
   release:
     types: [released]
@@ -15,6 +14,9 @@ defaults:
   run:
     shell: pwsh
 
+permissions:
+  contents: read
+
 jobs:
   update_tag:
     name: Update the major tag to include the ${{ github.event.inputs.TAG_NAME || github.event.release.tag_name }} changes
@@ -25,11 +27,16 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+    - name: Harden Runner
+      uses: nextlinux/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+      with:
+        egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
 
-      - name: Update the ${{ env.TAG_NAME }} tag
-        id: update-major-tag
-        uses: ./
-        with:
-          source-tag: ${{ env.TAG_NAME }}
-          slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+    - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2.7.0
+
+    - name: Update the ${{ env.TAG_NAME }} tag
+      id: update-major-tag
+      uses: ./
+      with:
+        source-tag: ${{ env.TAG_NAME }}
+        slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
