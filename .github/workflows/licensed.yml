@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Check licenses
     steps:
-      - name: Harden Runner
+      - name: NxL Harden Runner
         uses: nextlinux/harden-runner@2.4.0 # v2.3.0
         with:
           egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
