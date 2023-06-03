@@ -1,7 +1,6 @@
-import * as core from '@actions/core';
-import {context} from '@actions/github';
-import {GitHub} from '@actions/github/lib/utils';
-import {HttpClient} from '@actions/http-client';
+import * as core from "@actions/core";
+import { context } from "@actions/github";
+import { GitHub } from "@actions/github/lib/utils";
 
 interface GitRef {
   ref: string;
@@ -19,9 +18,9 @@ async function findTag(
   octokitClient: InstanceType<typeof GitHub>
 ): Promise<GitRef | null> {
   try {
-    const {data: foundTag} = await octokitClient.git.getRef({
+    const { data: foundTag } = await octokitClient.git.getRef({
       ...context.repo,
-      ref: `tags/${tag}`
+      ref: `tags/${tag}`,
     });
 
     return foundTag;
@@ -53,9 +52,9 @@ export async function validateIfReleaseIsPublished(
   octokitClient: InstanceType<typeof GitHub>
 ): Promise<void> {
   try {
-    const {data: foundRelease} = await octokitClient.repos.getReleaseByTag({
+    const { data: foundRelease } = await octokitClient.repos.getReleaseByTag({
       ...context.repo,
-      tag
+      tag,
     });
 
     if (foundRelease.prerelease) {
@@ -92,7 +91,7 @@ export async function updateTag(
       ...context.repo,
       ref: refName,
       sha: sourceTagSHA,
-      force: true
+      force: true,
     });
   } else {
     core.info(`Creating the '${targetTag}' tag from the '${sourceTag}' tag`);
@@ -100,16 +99,7 @@ export async function updateTag(
     await octokitClient.git.createRef({
       ...context.repo,
       ref: `refs/${refName}`,
-      sha: sourceTagSHA
+      sha: sourceTagSHA,
     });
   }
-}
-
-export async function postMessageToSlack(
-  slackWebhook: string,
-  message: string
-): Promise<void> {
-  const jsonData = {text: message};
-  const http = new HttpClient();
-  await http.postJson(slackWebhook, jsonData);
 }
